@@ -4,7 +4,13 @@ import './App.css';
 
 function App() {
   return (
-    <h1 className="text-red-600">aああ</h1>
+    <div className="m-auto w-60 mt-32">
+      <h2>Todoリスト with typescript</h2>
+      <form onSubmit={() => {}}>
+        <input type="text" onChange={() => {}} className="rounded-xl border-2 border-black"/>
+        <input type="submit" value="作成" className="border-2 border-black" />
+      </form>
+    </div>
   );
 }
 
