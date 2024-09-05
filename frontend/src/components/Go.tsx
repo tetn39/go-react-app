@@ -21,26 +21,28 @@ const Go = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // リロード回避
-    // 新しいtodoを作成
-    const newTask: Task = {
-      id: new Date().getTime(),
-      task: inputValue,
-      isCompleted: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+
 
     try {
       const response = await axios.post("http://localhost:8080/tasks", {
-        task: newTask.task,
-        isCompleted: newTask.isCompleted,
+        task: inputValue,
+        isCompleted: false,
       });
+      const newTask: Task = {
+        id: response.data.ID,
+        task: response.data.Task,
+        isCompleted: response.data.IsCompleted,
+        createdAt: response.data.CreatedAt,
+        updatedAt: response.data.UpdatedAt,
+      }
+      console.log(response.data);
       setTasks([...tasks, response.data]);
     } catch (error) {
       console.error("Error creating task:", error);
     }
 
     setInputValue("");
+    console.log(tasks);
   };
 
   const handleEdit = async (id: number) => {
@@ -62,6 +64,7 @@ const Go = () => {
   
   
   const handleDelete = async (id: number) => {
+    console.log(id);
     try {
       await axios.delete(`http://localhost:8080/tasks/${id}`);
       setTasks(tasks.filter(task => task.id !== id));
