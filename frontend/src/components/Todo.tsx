@@ -80,7 +80,7 @@ function Todo() {
 
             <input 
             type="checkbox" 
-            onChange={(e) => handleChecked(todo.id, todo.checked)} 
+            onChange={() => handleChecked(todo.id, todo.checked)} 
             className="rounded-xl border-2 border-black p-2"
             />
 

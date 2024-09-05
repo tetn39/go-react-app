@@ -2,7 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Home from './components/Home';
+import About from './components/About';
+import Todo from './components/Todo';
 
 
 const root = ReactDOM.createRoot(
@@ -12,6 +15,11 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
     <App />
+    <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/todo" element={<Todo />} />
+        </Routes>
     </BrowserRouter>
   </React.StrictMode>
 );
