@@ -85,32 +85,35 @@ const Go = () => {
 
   return (
     <div>
+      <div className="w-4/5 bg-purple-100 m-auto p-12">
       <h1>Goと接続</h1>
 
       <form onSubmit={(e) => handleSubmit(e)}>
         <input 
         type="text"
         onChange={(e) => handleChange(e)}
+        className="border border-gray-400 p-2 w-80"
         />
-        <button type="submit">送信</button>
+        <button type="submit" className="border border-gray-400 p-2 ml-2 hover:bg-purple-300">送信</button>
 
       </form>
       <ul>
         {tasks.map((task) => {
             return (
-            <li key={task.ID}>
+            <li key={task.ID} className="m-4">
               <input 
                 type="text" 
                 defaultValue={task.Task}
                 onChange={(e) => handleChange(e)} 
               />
 
-              <button onClick={() => handleEdit(task.ID)}>Edit</button>
-              <button onClick={() => handleDelete(task.ID)} >Delete</button>
+              <button onClick={() => handleEdit(task.ID)} className="m-4 p-2 border hover:bg-purple-300 border-gray-400">Edit</button>
+              <button onClick={() => handleDelete(task.ID)} className="m-4 p-2 border hover:bg-purple-300 border-gray-400">Delete</button>
             </li>
             )
         })}
       </ul>
+      </div>
     </div>
   );
 }
