@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import About from './components/About';
 import Todo from './components/Todo';
+import Go from './components/Go';
 
 
 const root = ReactDOM.createRoot(
@@ -19,6 +20,7 @@ root.render(
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/todo" element={<Todo />} />
+          <Route path="/go" element={<Go />} />
         </Routes>
     </BrowserRouter>
   </React.StrictMode>

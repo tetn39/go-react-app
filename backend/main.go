@@ -61,7 +61,7 @@ func main() {
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:3000"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders: []string{"Origin"},
+		AllowHeaders: []string{"Content-Type", "Authorization"},
 	}))
 
 	// ルーティング
@@ -78,6 +78,7 @@ func main() {
 }
 
 func getTasks(db *gorm.DB) gin.HandlerFunc {
+	fmt.Println("getTasks")
 	return func(c *gin.Context) {
 		var tasks []Task
 		db.Find(&tasks)
@@ -107,12 +108,16 @@ func putTasks(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		if err := c.ShouldBindJSON(&task); err != nil {
+		var updatedTask Task
+		if err := c.ShouldBindJSON(&updatedTask); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
+		task.Task = updatedTask.Task
+		task.IsCompleted = updatedTask.IsCompleted
 		db.Save(&task)
+
 		c.JSON(http.StatusOK, task)
 	}
 }
@@ -128,7 +133,7 @@ func deleteTasks(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		db.Delete(&task)
-		c.JSON(http.StatusOK, gin.H{"message": "Task deleted"})
+		c.JSON(http.StatusOK, gin.H{"message": "Task deleted", "task": task})
 	}
 }
 
