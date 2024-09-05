@@ -61,10 +61,10 @@ function Todo() {
   }
 
   return (
-    <div className="m-auto w-96 mt-32">
+    <div className="m-auto mt-32 w-96">
       <h2 className='text-3xl'>Todoリスト with typescript</h2>
       <form onSubmit={(e) => handleSubmit(e)}>
-        <input type="text" onChange={(e) => handleChange(e)} className="p-2 rounded-xl border-2 border-black"/>
+        <input type="text" onChange={(e) => handleChange(e)} className="rounded-xl border-2 border-black p-2"/>
         <input type="submit" value="作成" className="border-2 border-black" />
       </form>
       <ul>
@@ -73,7 +73,7 @@ function Todo() {
             <input 
             type="text" 
             onChange={(e) => handleEdit(todo.id, e.target.value)} 
-            className="p-2 rounded-xl border-2 border-black"
+            className="rounded-xl border-2 border-black p-2"
             value={todo.inputValue}
             disabled={todo.checked}
             />
@@ -81,7 +81,7 @@ function Todo() {
             <input 
             type="checkbox" 
             onChange={(e) => handleChecked(todo.id, todo.checked)} 
-            className="p-2 rounded-xl border-2 border-black"
+            className="rounded-xl border-2 border-black p-2"
             />
 
             <button 
