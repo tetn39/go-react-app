@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,10 +22,17 @@ import (
 func main() {
 	fmt.Println("起動")
 	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
+	r.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders: []string{"Origin"},
+	}))
+
+	r.GET("/getHello", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Hello World!",
+			"message": "てすと",
 		})
 	})
+
 	r.Run(":8080")
 }
