@@ -1,21 +1,32 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Go = () => {
 
   type Task = {
-    id: number;
-    task: string;
-    isCompleted: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    ID: number;
+    Task: string;
+    IsCompleted: boolean;
+    CreatedAt: Date;
+    UpdatedAt: Date;
   }
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [inputValue, setInputValue] = useState("");
 
+  useEffect(() => {
+    const getTasks = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/tasks");
+        setTasks(response.data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    }
+    getTasks();
+  });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(e.target.value);
     setInputValue(e.target.value);
   };
 
@@ -29,20 +40,18 @@ const Go = () => {
         isCompleted: false,
       });
       const newTask: Task = {
-        id: response.data.ID,
-        task: response.data.Task,
-        isCompleted: response.data.IsCompleted,
-        createdAt: response.data.CreatedAt,
-        updatedAt: response.data.UpdatedAt,
+        ID: response.data.ID,
+        Task: response.data.Task,
+        IsCompleted: response.data.IsCompleted,
+        CreatedAt: response.data.CreatedAt,
+        UpdatedAt: response.data.UpdatedAt,
       }
-      console.log(response.data);
       setTasks([...tasks, response.data]);
     } catch (error) {
       console.error("Error creating task:", error);
     }
 
     setInputValue("");
-    console.log(tasks);
   };
 
   const handleEdit = async (id: number) => {
@@ -53,7 +62,7 @@ const Go = () => {
       });
       
       setTasks(tasks.map((task) => 
-        task.id === id ? response.data : task
+        task.ID === id ? response.data : task
       ));
     } catch (error) {
       console.error("Error editing task:", error);
@@ -64,10 +73,10 @@ const Go = () => {
   
   
   const handleDelete = async (id: number) => {
-    console.log(id);
+
     try {
       await axios.delete(`http://localhost:8080/tasks/${id}`);
-      setTasks(tasks.filter(task => task.id !== id));
+      setTasks(tasks.filter(task => task.ID !== id));
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -89,16 +98,15 @@ const Go = () => {
       <ul>
         {tasks.map((task) => {
             return (
-            <li key={task.id}>
+            <li key={task.ID}>
               <input 
                 type="text" 
-                defaultValue={task.task}  // taskごとに固有の値
+                defaultValue={task.Task}
                 onChange={(e) => handleChange(e)} 
               />
 
-
-              <button onClick={() => handleEdit(task.id)}>Edit</button>
-              <button onClick={() => handleDelete(task.id)} >Delete</button>
+              <button onClick={() => handleEdit(task.ID)}>Edit</button>
+              <button onClick={() => handleDelete(task.ID)} >Delete</button>
             </li>
             )
         })}
