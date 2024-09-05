@@ -2,37 +2,145 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-// type fruit struct {
-// 	ID   int    `json:"id"`
-// 	Name string `json:"name"`
-// 	Icon string `json:"icon"`
-// }
+/*
+gorm.Modelを使うと以下のようなフィールドが追加される
 
-// var fruits = []fruit{
-// 	{ID: 1, Name: "apple", Icon: "🍎"},
-// 	{ID: 2, Name: "banana", Icon: "🍌"},
-// 	{ID: 3, Name: "grape", Icon: "🍇"},
-// }
+	ID        uint           `gorm:"primaryKey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+*/
+type Task struct {
+	ID          uint      `gorm:"primary_key"`
+	Task        string    `gorm:"size:255"`
+	IsCompleted bool      `gorm:"default:false"`
+	CreatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+}
 
 func main() {
 	fmt.Println("起動")
+
+	// envファイルの読み込み
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file")
+	}
+
+	// envから定義
+	dbUser := os.Getenv("POSTGRES_USER")
+	dbPass := os.Getenv("POSTGRES_PASSWORD")
+	dbName := os.Getenv("POSTGRES_DB")
+	dbHost := os.Getenv("POSTGRES_HOST")
+	dbPort := os.Getenv("POSTGRES_PORT")
+
+	// DB接続
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUser, dbPass, dbName)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal("DB接続エラー", err)
+	}
+
+	// マイグレーション
+	db.AutoMigrate(&Task{})
+
 	r := gin.Default()
+	// CORS設定
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:3000"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders: []string{"Origin"},
 	}))
 
-	r.GET("/getHello", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "てすと",
-		})
-	})
+	// ルーティング
+	r.GET("/getHello", getHello)
+	r.GET("/getTest", getTest)
+
+	// CRUD
+	r.GET("/tasks", getTasks(db))
+	r.POST("/tasks", postTasks(db))
+	r.PUT("/tasks/:id", putTasks(db))
+	r.DELETE("/tasks/:id", deleteTasks(db))
 
 	r.Run(":8080")
+}
+
+func getTasks(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var tasks []Task
+		db.Find(&tasks)
+		c.JSON(http.StatusOK, tasks)
+	}
+}
+
+func postTasks(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var task Task
+		if err := c.ShouldBindJSON(&task); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		db.Create(&task)
+		c.JSON(http.StatusOK, task)
+	}
+}
+
+func putTasks(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var task Task
+		id := c.Param("id")
+
+		if err := db.First(&task, id).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
+			return
+		}
+
+		if err := c.ShouldBindJSON(&task); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		db.Save(&task)
+		c.JSON(http.StatusOK, task)
+	}
+}
+
+func deleteTasks(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var task Task
+		id := c.Param("id")
+
+		if err := db.First(&task, id).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
+			return
+		}
+
+		db.Delete(&task)
+		c.JSON(http.StatusOK, gin.H{"message": "Task deleted"})
+	}
+}
+
+// テスト用
+func getTest(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "てすと3",
+	})
+}
+
+func getHello(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Hello",
+	})
 }

@@ -12,7 +12,7 @@ const Home = () => {
   useEffect(()=> {
     (
       async () => {
-        const data = await axios.get("http://localhost:8080/getHello")
+        const data = await axios.get("http://localhost:8080/getTest")
         console.log(data)
         setText(data.data)
       }
