@@ -24,7 +24,7 @@ const Go = () => {
       }
     }
     getTasks();
-  });
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
