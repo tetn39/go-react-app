@@ -32,6 +32,9 @@ const Go = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // リロード回避
+    if (!inputValue.trim()) {
+      return;
+    }
 
 
     try {
@@ -39,18 +42,11 @@ const Go = () => {
         task: inputValue,
         isCompleted: false,
       });
-      const newTask: Task = {
-        ID: response.data.ID,
-        Task: response.data.Task,
-        IsCompleted: response.data.IsCompleted,
-        CreatedAt: response.data.CreatedAt,
-        UpdatedAt: response.data.UpdatedAt,
-      }
       setTasks([...tasks, response.data]);
     } catch (error) {
       console.error("Error creating task:", error);
     }
-
+    (e.target as HTMLFormElement).reset();
     setInputValue("");
   };
 
@@ -58,7 +54,6 @@ const Go = () => {
     try {
       const response = await axios.put(`http://localhost:8080/tasks/${id}`, {
         task: inputValue,
-        isCompleted: false, // ここも変更可能にしたい場合は修正する
       });
       
       setTasks(tasks.map((task) => 
@@ -70,6 +65,17 @@ const Go = () => {
   
     setInputValue("");
   };
+
+  const handleCheck = async (id: number, task:string, check: boolean) => {
+    try {
+      const response = await axios.put(`http://localhost:8080/tasks/${id}`, {
+        task: task,
+        isCompleted: check,
+      });
+    } catch (error) {
+      console.error("Error checking task:", error);
+    }
+  }
   
   
   const handleDelete = async (id: number) => {
@@ -102,10 +108,20 @@ const Go = () => {
             return (
             <li key={task.ID} className="m-4">
               <input 
-                type="text" 
+                type="text"
+                value={task.Task}
                 defaultValue={task.Task}
                 onChange={(e) => handleChange(e)} 
+                disabled={task.IsCompleted}
+                className='border border-gray-400 p-2'
               />
+              <span className='p-2'>{task.IsCompleted ? "完了" : "未完了"}</span>
+              <input 
+                type="checkbox"
+                checked={task.IsCompleted}
+                onChange={(e) => handleCheck(task.ID, task.Task, e.target.checked)}
+                className='m-2 p-2'
+               />
 
               <button onClick={() => handleEdit(task.ID)} className="m-4 p-2 border hover:bg-purple-300 border-gray-400">Edit</button>
               <button onClick={() => handleDelete(task.ID)} className="m-4 p-2 border hover:bg-purple-300 border-gray-400">Delete</button>
