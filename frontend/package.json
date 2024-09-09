@@ -22,7 +22,9 @@
     "start": "WATCHPACK_POLLING=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src",
+    "prettier": "prettier ./src --write"
   },
   "eslintConfig": {
     "extends": [
@@ -43,13 +45,15 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "^9.9.1",
+    "@eslint/js": "^9.10.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.35.2",
     "eslint-plugin-tailwindcss": "^3.17.4",
     "globals": "^15.9.0",
     "postcss": "^8.4.45",
+    "prettier": "3.3.3",
     "tailwindcss": "^3.4.10",
     "typescript-eslint": "^8.4.0"
   }

@@ -1,15 +1,14 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const Go = () => {
-
   type Task = {
     ID: number;
     Task: string;
     IsCompleted: boolean;
     CreatedAt: Date;
     UpdatedAt: Date;
-  }
+  };
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -22,7 +21,7 @@ const Go = () => {
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
-    }
+    };
     getTasks();
   }, []);
 
@@ -35,7 +34,6 @@ const Go = () => {
     if (!inputValue.trim()) {
       return;
     }
-
 
     try {
       const response = await axios.post("http://localhost:8080/tasks", {
@@ -55,82 +53,96 @@ const Go = () => {
       const response = await axios.put(`http://localhost:8080/tasks/${id}`, {
         task: inputValue,
       });
-      
-      setTasks(tasks.map((task) => 
-        task.ID === id ? response.data : task
-      ));
+
+      setTasks(tasks.map((task) => (task.ID === id ? response.data : task)));
     } catch (error) {
       console.error("Error editing task:", error);
     }
-  
+
     setInputValue("");
   };
 
-  const handleCheck = async (id: number, task:string, check: boolean) => {
+  const handleCheck = async (id: number, task: string, check: boolean) => {
     try {
       const response = await axios.put(`http://localhost:8080/tasks/${id}`, {
         task: task,
         isCompleted: check,
       });
+      setTasks(tasks.map((task) => (task.ID === id ? response.data : task)));
     } catch (error) {
       console.error("Error checking task:", error);
     }
-  }
-  
-  
-  const handleDelete = async (id: number) => {
+  };
 
+  const handleDelete = async (id: number) => {
     try {
       await axios.delete(`http://localhost:8080/tasks/${id}`);
-      setTasks(tasks.filter(task => task.ID !== id));
+      setTasks(tasks.filter((task) => task.ID !== id));
     } catch (error) {
       console.error("Error deleting task:", error);
     }
   };
-  
 
   return (
     <div>
       <div className="w-4/5 bg-purple-100 m-auto p-12">
-      <h1>Goと接続</h1>
+        <h1>Goと接続</h1>
 
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input 
-        type="text"
-        onChange={(e) => handleChange(e)}
-        className="border border-gray-400 p-2 w-80"
-        />
-        <button type="submit" className="border border-gray-400 p-2 ml-2 hover:bg-purple-300">送信</button>
-
-      </form>
-      <ul>
-        {tasks.map((task) => {
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <input
+            type="text"
+            onChange={(e) => handleChange(e)}
+            className="border border-gray-400 p-2 w-80"
+          />
+          <button
+            type="submit"
+            className="border border-gray-400 p-2 ml-2 hover:bg-purple-300"
+          >
+            送信
+          </button>
+        </form>
+        <ul>
+          {tasks.map((task) => {
             return (
-            <li key={task.ID} className="m-4">
-              <input 
-                type="text"
-                value={task.Task}
-                defaultValue={task.Task}
-                onChange={(e) => handleChange(e)} 
-                disabled={task.IsCompleted}
-                className='border border-gray-400 p-2'
-              />
-              <span className='p-2'>{task.IsCompleted ? "完了" : "未完了"}</span>
-              <input 
-                type="checkbox"
-                checked={task.IsCompleted}
-                onChange={(e) => handleCheck(task.ID, task.Task, e.target.checked)}
-                className='m-2 p-2'
-               />
+              <li key={task.ID} className="m-4">
+                <input
+                  type="text"
+                  value={task.Task}
+                  defaultValue={task.Task}
+                  onChange={(e) => handleChange(e)}
+                  disabled={task.IsCompleted}
+                  className="border border-gray-400 p-2"
+                />
+                <span className="p-2">
+                  {task.IsCompleted ? "完了" : "未完了"}
+                </span>
+                <input
+                  type="checkbox"
+                  checked={task.IsCompleted}
+                  onChange={(e) =>
+                    handleCheck(task.ID, task.Task, e.target.checked)
+                  }
+                  className="m-2 p-2"
+                />
 
-              <button onClick={() => handleEdit(task.ID)} className="m-4 p-2 border hover:bg-purple-300 border-gray-400">Edit</button>
-              <button onClick={() => handleDelete(task.ID)} className="m-4 p-2 border hover:bg-purple-300 border-gray-400">Delete</button>
-            </li>
-            )
-        })}
-      </ul>
+                <button
+                  onClick={() => handleEdit(task.ID)}
+                  className="m-4 p-2 border hover:bg-purple-300 border-gray-400"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(task.ID)}
+                  className="m-4 p-2 border hover:bg-purple-300 border-gray-400"
+                >
+                  Delete
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );
-}
+};
 export default Go;
