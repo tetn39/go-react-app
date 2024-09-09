@@ -8,4 +8,6 @@ RUN npm install
 
 COPY . .
 
+RUN npm run prettier
+
 CMD [ "npm", "start" ]
