@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const App = () => {
   return (
-    <div className="App">
+    <div>
       <Link to="/">Index</Link>
       <br />
       <Link to="/about">About</Link>

@@ -85,18 +85,18 @@ const Go = () => {
 
   return (
     <div>
-      <div className="w-4/5 bg-purple-100 m-auto p-12">
+      <div className="m-auto w-4/5 bg-purple-100 p-12">
         <h1>Goと接続</h1>
 
         <form onSubmit={(e) => handleSubmit(e)}>
           <input
             type="text"
             onChange={(e) => handleChange(e)}
-            className="border border-gray-400 p-2 w-80"
+            className="w-80 border border-gray-400 p-2"
           />
           <button
             type="submit"
-            className="border border-gray-400 p-2 ml-2 hover:bg-purple-300"
+            className="ml-2 border border-gray-400 p-2 hover:bg-purple-300"
           >
             送信
           </button>
@@ -127,13 +127,13 @@ const Go = () => {
 
                 <button
                   onClick={() => handleEdit(task.ID)}
-                  className="m-4 p-2 border hover:bg-purple-300 border-gray-400"
+                  className="m-4 border border-gray-400 p-2 hover:bg-purple-300"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(task.ID)}
-                  className="m-4 p-2 border hover:bg-purple-300 border-gray-400"
+                  className="m-4 border border-gray-400 p-2 hover:bg-purple-300"
                 >
                   Delete
                 </button>
