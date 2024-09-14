@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -23,11 +22,9 @@ gorm.Modelを使うと以下のようなフィールドが追加される
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 */
 type Task struct {
-	ID          uint      `gorm:"primary_key"`
-	Task        string    `gorm:"size:255"`
+	gorm.Model
 	IsCompleted bool      `gorm:"default:false"`
-	CreatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+	Task        string    `gorm:"size:255"`
 }
 
 func main() {
