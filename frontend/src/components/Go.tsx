@@ -107,7 +107,6 @@ const Go = () => {
               <li key={task.ID} className="m-4">
                 <input
                   type="text"
-                  value={task.Task}
                   defaultValue={task.Task}
                   onChange={(e) => handleChange(e)}
                   disabled={task.IsCompleted}
