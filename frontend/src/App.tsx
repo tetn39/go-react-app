@@ -27,6 +27,11 @@ const App = () => {
             Go
           </Link>
         </li>
+        <li className="inline-block w-32 text-center hover:border hover:border-zinc-400">
+          <Link to="/signup" className="block leading-10">
+            Signup
+          </Link>
+        </li>
       </ul>
     </header>
   );
