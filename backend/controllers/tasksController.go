@@ -11,14 +11,6 @@ import (
 func GetTasks(c *gin.Context)  {
 	var tasks []models.Task
 
-	if err := c.BindJSON(&tasks); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-
 	result := initializers.DB.Find(&tasks)
 
 	if result.Error != nil {
