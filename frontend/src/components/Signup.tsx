@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
@@ -18,7 +19,16 @@ const Signup = () => {
         console.log("Signup failed");
       }
     } catch (error) {
-      console.error("There was an error signing up!", error);
+      // axiosのエラーかどうか判定
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 409) {
+          console.log("Email already exists");
+          // 画面遷移
+          navigate("/about");
+        }
+      } else {
+        console.log(error);
+      }
     }
   }
   return (

@@ -39,6 +39,19 @@ func Signup(c *gin.Context) {
 		return
 	}
 
+	// すでにユーザーが存在するか
+	var count int64
+	initializers.DB.Model(&models.User{}).Where("email = ?", body.Email).Count(&count)
+
+	if count > 0 {
+		c.JSON(http.StatusConflict, gin.H{
+			"error": "User already exists",
+		})	
+			
+		return	
+	}
+
+	
 	// ユーザーを作成
 	user := models.User{
 		Email: body.Email,
