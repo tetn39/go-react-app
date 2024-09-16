@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tetn39/go-react-app/controllers"
 	"github.com/tetn39/go-react-app/initializers"
+	"github.com/tetn39/go-react-app/middleware"
 )
 
 func init() {
@@ -39,6 +40,7 @@ func main() {
 	// ログイン機能
 	r.POST("/signup", controllers.Signup)
 	r.POST("/login", controllers.Login)
+	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
 
 	r.Run(":8080")
 }

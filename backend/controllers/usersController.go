@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/tetn39/go-react-app/initializers"
 	"github.com/tetn39/go-react-app/models"
 	"golang.org/x/crypto/bcrypt"
@@ -116,7 +116,14 @@ func Login(c *gin.Context) {
 	}
 	
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Autorization", tokenString, 3600 * 24 * 30, "", "", false, true)
+	c.SetCookie("Authorization", tokenString, 3600 * 24 * 30, "", "", false, true)
 
 	c.JSON(http.StatusOK, gin.H{})
+}
+
+func Validate(c *gin.Context) {
+	user, _ := c.Get("user")
+	c.JSON(http.StatusOK, gin.H{
+		"message": user,
+	})
 }
