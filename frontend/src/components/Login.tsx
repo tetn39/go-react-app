@@ -1,31 +1,27 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/signup", {
+      const response = await axios.post("http://localhost:8080/login", {
         Email: email,
         Password: password,
       });
       if (response.status === 200) {
-        console.log("Signup successful");
+        console.log("Login successful");
         console.log(response.data["message"]);
       } else {
-        console.log("Signup failed");
+        console.log("Login failed");
       }
     } catch (error) {
       // axiosのエラーかどうか判定
       if (axios.isAxiosError(error)) {
-        if (error.response?.status === 409) {
-          console.log("Email already exists");
-          // 画面遷移
-          navigate("/about");
+        if (error.response?.status === 401) {
+          console.log("Email or password is incorrect");
         }
       } else {
         console.log(error);
@@ -34,7 +30,7 @@ const Signup = () => {
   }
   return (
     <div>
-      <h1 className="m-auto size-20 text-center">Signup</h1>
+      <h1 className="m-auto size-20 text-center">Login</h1>
       <form onSubmit={handleSubmit} className="m-auto w-52 bg-yellow-200 p-2">
         <span>Email</span>
         <input
@@ -56,4 +52,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;

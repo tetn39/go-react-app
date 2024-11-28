@@ -24,7 +24,7 @@ func Signup(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to read body",
 		})
-		
+
 		return
 	}
 
@@ -35,7 +35,7 @@ func Signup(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to hash password",
 		})
-		
+
 		return
 	}
 
@@ -46,12 +46,12 @@ func Signup(c *gin.Context) {
 	if count > 0 {
 		c.JSON(http.StatusConflict, gin.H{
 			"error": "User already exists",
-		})	
-			
-		return	
+		})
+
+		return
 	}
 
-	
+
 	// ユーザーを作成
 	user := models.User{
 		Email: body.Email,
@@ -63,7 +63,7 @@ func Signup(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to create user",
 		})
-		
+
 		return
 	}
 
@@ -84,7 +84,7 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to read body",
 		})
-		
+
 		return
 	}
 
@@ -96,7 +96,7 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalied emaill or password",
 		})
-		
+
 		return
 	}
 
@@ -124,14 +124,16 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to create token",
 		})
-		
+
 		return
 	}
-	
+
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600 * 24 * 30, "", "", false, true)
 
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Login success",
+	})
 }
 
 func Validate(c *gin.Context) {

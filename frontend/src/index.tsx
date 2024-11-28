@@ -8,6 +8,7 @@ import About from "./components/About";
 import Todo from "./components/Todo";
 import Go from "./components/Go";
 import Signup from "./components/Signup";
+import Login from "./components/Login";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -22,6 +23,7 @@ root.render(
         <Route path="/todo" element={<Todo />} />
         <Route path="/go" element={<Go />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

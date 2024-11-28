@@ -32,6 +32,11 @@ const App = () => {
             Signup
           </Link>
         </li>
+        <li className="inline-block w-32 text-center hover:border hover:border-zinc-400">
+          <Link to="/login" className="block leading-10">
+            Login
+          </Link>
+        </li>
       </ul>
     </header>
   );
