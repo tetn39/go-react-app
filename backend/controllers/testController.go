@@ -9,7 +9,7 @@ import (
 // テスト用
 func GetTest(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"message": "げっとてすと",
+		"message": "げっとてあああああすと",
 	})
 }
 

@@ -13,4 +13,4 @@ RUN go mod tidy
 COPY . .
 
 # CMD ["go", "run", "main.go"]
-CMD ["air"]
+CMD ["air", "-c", ".air.toml"]
