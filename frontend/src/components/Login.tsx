@@ -12,7 +12,6 @@ const Login = () => {
         Password: password,
       });
       if (response.status === 200) {
-        console.log("Login successful");
         console.log(response.data["message"]);
       } else {
         console.log("Login failed");

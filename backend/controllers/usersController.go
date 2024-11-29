@@ -12,13 +12,16 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// リクエストボディ定義
+type AuthRequestBody struct {
+	Email string `json:"email"`
+	Password string `json:"password"`
+}
+
 func Signup(c *gin.Context) {
 
 	// リクエストボディを取得
-	var body struct {
-		Email string
-		Password string
-	}
+	var body AuthRequestBody
 
 	if c.BindJSON(&body) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -74,11 +77,7 @@ func Signup(c *gin.Context) {
 
 func Login(c *gin.Context) {
 
-	// リクエストボディを取得
-	var body struct {
-		Email string
-		Password string
-	}
+	var body AuthRequestBody
 
 	if c.BindJSON(&body) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -90,9 +89,8 @@ func Login(c *gin.Context) {
 
 	// ユーザーを取得
 	var user models.User
-	initializers.DB.First(&user, "email = ?", body.Email)
 
-	if user.ID == 0 {
+	if initializers.DB.First(&user, "email = ?", body.Email).Error != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalied emaill or password",
 		})
@@ -101,9 +99,7 @@ func Login(c *gin.Context) {
 	}
 
 	// パスワードの比較
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
-
-	if err != nil {
+	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password)) != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalied emaill or password",
 		})
@@ -128,17 +124,24 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, 3600 * 24 * 30, "", "", false, true)
+	c.SetCookie("Authorization", tokenString, 3600 * 24 * 30, "/", "localhost", true, true)
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Login success",
+		"message": "Login successful",
 	})
 }
 
 func Validate(c *gin.Context) {
-	user, _ := c.Get("user")
+	user, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Invalid token",
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"message": user,
+		"message": "User validated",
+		"user": user,
 	})
 }
