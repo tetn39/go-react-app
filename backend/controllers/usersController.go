@@ -140,8 +140,19 @@ func Validate(c *gin.Context) {
 		return
 	}
 
+	// ユーザー情報をより詳細に返す
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User validated",
-		"user": user,
+		"user": gin.H{
+			"id": user.(models.User).ID,
+			"email": user.(models.User).Email,
+		},
+	})
+}
+
+func Logout(c *gin.Context) {
+	c.SetCookie("Authorization", "", -1, "/", "localhost", false, true)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logout successful",
 	})
 }

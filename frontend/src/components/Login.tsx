@@ -6,30 +6,41 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/login", {
-        Email: email,
-        Password: password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/login",
+        {
+          Email: email,
+          Password: password,
+        },
+        { withCredentials: true },
+      );
+
       if (response.status === 200) {
-        console.log(response.data["message"]);
-        navigate("/about");
-      } else {
-        console.log("Login failed");
+        const validateResponse = await axios.get(
+          "http://localhost:8080/validate",
+          { withCredentials: true },
+        );
+
+        if (validateResponse.status === 200) {
+          console.log("ログイン成功");
+          navigate("/");
+        }
       }
     } catch (error) {
-      // axiosのエラーかどうか判定
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
-          console.log("Email or password is incorrect");
+          console.log("メールアドレスまたはパスワードが間違っています");
         }
       } else {
         console.log(error);
       }
     }
   }
+
   return (
     <div className="container mx-auto max-w-md px-6 py-12">
       <h1 className="mb-8 text-center text-3xl font-bold text-indigo-600">

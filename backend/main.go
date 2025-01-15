@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -22,9 +23,11 @@ func main() {
 	r := gin.Default()
 	// CORS設定
 	r.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3000"},
-		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders: []string{"Content-Type", "Authorization"},
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
 	}))
 
 	// ルーティング
@@ -40,6 +43,7 @@ func main() {
 	// ログイン機能
 	r.POST("/signup", controllers.Signup)
 	r.POST("/login", controllers.Login)
+	r.POST("/logout", controllers.Logout)
 	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
 
 	r.Run(":8080")
