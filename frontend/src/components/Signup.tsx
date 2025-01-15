@@ -5,10 +5,12 @@ import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError("");
     try {
       const response = await axios.post(
         "http://localhost:8080/signup",
@@ -44,6 +46,7 @@ const Signup = () => {
           }
         } catch (loginError) {
           console.log("自動ログインに失敗:", loginError);
+          setError("ログインに失敗しました。もう一度お試しください。");
           navigate("/login");
         }
       }
@@ -74,11 +77,15 @@ const Signup = () => {
             }
           } catch (loginError) {
             console.log("ログインに失敗:", loginError);
+            setError("パスワードが間違っています。");
             navigate("/login");
           }
+        } else {
+          setError("エラーが発生しました。もう一度お試しください。");
         }
       } else {
         console.log(error);
+        setError("予期せぬエラーが発生しました。");
       }
     }
   }
@@ -88,6 +95,11 @@ const Signup = () => {
       <h1 className="mb-8 text-center text-3xl font-bold text-indigo-600">
         アカウント登録
       </h1>
+      {error && (
+        <div className="mb-4 rounded-lg bg-red-100 p-4 text-red-700">
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700">

@@ -59,7 +59,7 @@ const App = () => {
   return (
     <header className="bg-gradient-to-r from-indigo-600 to-purple-700 p-6 shadow-xl">
       <nav className="container mx-auto">
-        <ul className="flex items-center justify-center gap-8">
+        <ul className="flex h-[52px] items-center justify-center gap-8">
           <li>
             <Link
               to="/"

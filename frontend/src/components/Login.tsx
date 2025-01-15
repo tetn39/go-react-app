@@ -5,10 +5,12 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError("");
     try {
       const response = await axios.post(
         "http://localhost:8080/login",
@@ -34,9 +36,13 @@ const Login = () => {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
           console.log("メールアドレスまたはパスワードが間違っています");
+          setError("メールアドレスまたはパスワードが間違っています");
+        } else {
+          setError("エラーが発生しました。もう一度お試しください。");
         }
       } else {
         console.log(error);
+        setError("予期せぬエラーが発生しました。");
       }
     }
   }
@@ -46,6 +52,11 @@ const Login = () => {
       <h1 className="mb-8 text-center text-3xl font-bold text-indigo-600">
         ログイン
       </h1>
+      {error && (
+        <div className="mb-4 rounded-lg bg-red-100 p-4 text-red-700">
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700">
