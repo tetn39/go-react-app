@@ -16,7 +16,7 @@ func GetTasks(c *gin.Context)  {
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to get tasks",
-		})	
+		})
 	}
 	c.JSON(http.StatusOK, tasks)
 }
