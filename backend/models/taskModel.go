@@ -14,4 +14,5 @@ type Task struct {
 	gorm.Model
 	IsCompleted bool      `gorm:"default:false"`
 	Task        string    `gorm:"size:255"`
+	UserID      uint      `gorm:"not null"`
 }

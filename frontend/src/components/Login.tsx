@@ -29,6 +29,10 @@ const Login = () => {
 
         if (validateResponse.status === 200) {
           console.log("ログイン成功");
+          localStorage.setItem(
+            "userID",
+            validateResponse.data.user.id.toString(),
+          );
           navigate("/");
         }
       }

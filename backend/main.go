@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -25,26 +24,25 @@ func main() {
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		AllowHeaders:     []string{"Content-Type"},
 		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
 	}))
 
-	// ルーティング
-	r.GET("/getHello", controllers.GetHello)
-	r.GET("/getTest", controllers.GetTest)
+	// 認証が必要なルート
+	authorized := r.Group("/")
+	authorized.Use(middleware.RequireAuth)
+	{
+		authorized.GET("/tasks", controllers.GetTasks)
+		authorized.POST("/tasks", controllers.PostTasks)
+		authorized.PUT("/tasks/:id", controllers.PutTasks)
+		authorized.DELETE("/tasks/:id", controllers.DeleteTasks)
+		authorized.GET("/validate", controllers.Validate)
+	}
 
-	// TODOリスト CRUD
-	r.GET("/tasks", controllers.GetTasks)
-	r.POST("/tasks", controllers.PostTasks)
-	r.PUT("/tasks/:id", controllers.PutTasks)
-	r.DELETE("/tasks/:id", controllers.DeleteTasks)
-
-	// ログイン機能
+	// 認証が不要なルート
 	r.POST("/signup", controllers.Signup)
 	r.POST("/login", controllers.Login)
 	r.POST("/logout", controllers.Logout)
-	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
 
-	r.Run(":8080")
+	r.Run()
 }

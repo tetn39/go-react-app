@@ -35,7 +35,9 @@ const Go = () => {
 
   const getTasks = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/tasks");
+      const response = await axios.get("http://localhost:8080/tasks", {
+        withCredentials: true,
+      });
       setTasks(response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
@@ -51,10 +53,14 @@ const Go = () => {
     if (!inputValue.trim()) return;
 
     try {
-      const response = await axios.post("http://localhost:8080/tasks", {
-        task: inputValue,
-        isCompleted: false,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/tasks",
+        {
+          task: inputValue,
+          isCompleted: false,
+        },
+        { withCredentials: true },
+      );
       setTasks([...tasks, response.data]);
     } catch (error) {
       console.error("Error creating task:", error);
@@ -65,9 +71,13 @@ const Go = () => {
 
   const handleEdit = async (id: number) => {
     try {
-      const response = await axios.put(`http://localhost:8080/tasks/${id}`, {
-        task: inputValue,
-      });
+      const response = await axios.put(
+        `http://localhost:8080/tasks/${id}`,
+        {
+          task: inputValue,
+        },
+        { withCredentials: true },
+      );
       setTasks(tasks.map((task) => (task.ID === id ? response.data : task)));
     } catch (error) {
       console.error("Error editing task:", error);
@@ -77,10 +87,14 @@ const Go = () => {
 
   const handleCheck = async (id: number, task: string, check: boolean) => {
     try {
-      const response = await axios.put(`http://localhost:8080/tasks/${id}`, {
-        task: task,
-        isCompleted: check,
-      });
+      const response = await axios.put(
+        `http://localhost:8080/tasks/${id}`,
+        {
+          task: task,
+          isCompleted: check,
+        },
+        { withCredentials: true },
+      );
       setTasks(tasks.map((task) => (task.ID === id ? response.data : task)));
     } catch (error) {
       console.error("Error checking task:", error);
@@ -89,7 +103,9 @@ const Go = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:8080/tasks/${id}`);
+      await axios.delete(`http://localhost:8080/tasks/${id}`, {
+        withCredentials: true,
+      });
       setTasks(tasks.filter((task) => task.ID !== id));
     } catch (error) {
       console.error("Error deleting task:", error);

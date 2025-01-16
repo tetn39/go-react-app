@@ -10,8 +10,15 @@ import (
 
 func GetTasks(c *gin.Context)  {
 	var tasks []models.Task
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Invalid token",
+		})
+		return
+	}
 
-	result := initializers.DB.Find(&tasks)
+	result := initializers.DB.Where("user_id = ?", userID).Find(&tasks)
 
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -23,6 +30,15 @@ func GetTasks(c *gin.Context)  {
 
 func PostTasks(c *gin.Context) {
 	var task models.Task
+
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Invalid token",
+		})
+		return
+	}
+	task.UserID = userID.(uint)
 
 	if err := c.BindJSON(&task); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -38,8 +54,15 @@ func PostTasks(c *gin.Context) {
 func PutTasks(c *gin.Context) {
 	var task models.Task
 	id := c.Param("id")
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Invalid token",
+		})
+		return
+	}
 
-	if err := initializers.DB.First(&task, id).Error; err != nil {
+	if err := initializers.DB.Where("user_id = ?", userID).First(&task, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
 		return
 	}
@@ -61,8 +84,15 @@ func PutTasks(c *gin.Context) {
 func DeleteTasks(c *gin.Context) {
 	var task models.Task
 	id := c.Param("id")
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Invalid token",
+		})
+		return
+	}
 
-	if err := initializers.DB.First(&task, id).Error; err != nil {
+	if err := initializers.DB.Where("user_id = ?", userID).First(&task, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
 		return
 	}

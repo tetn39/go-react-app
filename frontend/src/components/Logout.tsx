@@ -7,8 +7,13 @@ const Logout = () => {
 
   async function handleLogout() {
     try {
-      const response = await axios.post("http://localhost:8080/logout");
+      const response = await axios.post(
+        "http://localhost:8080/logout",
+        {},
+        { withCredentials: true },
+      );
       if (response.status === 200) {
+        localStorage.removeItem("userID");
         console.log(response.data["message"]);
         navigate("/login");
       }

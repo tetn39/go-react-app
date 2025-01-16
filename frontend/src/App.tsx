@@ -47,6 +47,7 @@ const App = () => {
         { withCredentials: true },
       );
       if (response.status === 200) {
+        localStorage.removeItem("userID");
         setIsLoggedIn(false);
         setUser(null);
         navigate("/login");
@@ -89,7 +90,11 @@ const App = () => {
               <li>
                 <Link
                   to="/signup"
-                  className="rounded-xl bg-white px-5 py-2.5 font-bold text-indigo-600 transition-all duration-300 hover:scale-105 hover:bg-white/90 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
+                  className={`rounded-xl px-5 py-2.5 font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95 ${
+                    location.pathname === "/signup"
+                      ? "bg-white text-indigo-600"
+                      : "border-2 border-white text-white hover:bg-white hover:text-indigo-600"
+                  }`}
                 >
                   Signup
                 </Link>
@@ -97,21 +102,30 @@ const App = () => {
               <li>
                 <Link
                   to="/login"
-                  className="rounded-xl border-2 border-white px-5 py-2.5 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white hover:text-indigo-600 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
+                  className={`rounded-xl px-5 py-2.5 font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95 ${
+                    location.pathname === "/login"
+                      ? "bg-white text-indigo-600"
+                      : "border-2 border-white text-white hover:bg-white hover:text-indigo-600"
+                  }`}
                 >
                   Login
                 </Link>
               </li>
             </>
           ) : (
-            <li>
-              <button
-                onClick={handleLogout}
-                className="rounded-xl border-2 border-white px-5 py-2.5 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white hover:text-indigo-600 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
-              >
-                Logout
-              </button>
-            </li>
+            <>
+              <li className="ml-auto">
+                <span className="font-medium text-white">{user?.email}</span>
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="rounded-xl border-2 border-white px-5 py-2.5 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white hover:text-indigo-600 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
+                >
+                  Logout
+                </button>
+              </li>
+            </>
           )}
         </ul>
       </nav>

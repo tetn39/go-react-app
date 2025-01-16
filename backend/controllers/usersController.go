@@ -72,6 +72,7 @@ func Signup(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User created",
+		"userID": user.ID,
 	})
 }
 
@@ -128,6 +129,7 @@ func Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login successful",
+		"userID": user.ID,
 	})
 }
 
