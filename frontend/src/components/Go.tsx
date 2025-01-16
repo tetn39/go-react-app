@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Go = () => {
   type Task = {
@@ -12,18 +13,34 @@ const Go = () => {
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const getTasks = async () => {
+    const checkAuth = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/tasks");
-        setTasks(response.data);
+        const response = await axios.get("http://localhost:8080/validate", {
+          withCredentials: true,
+        });
+        if (response.status === 200) {
+          setIsLoggedIn(true);
+          getTasks();
+        }
       } catch (error) {
-        console.error("Error fetching tasks:", error);
+        console.log("認証エラー:", error);
+        setIsLoggedIn(false);
       }
     };
-    getTasks();
+    checkAuth();
   }, []);
+
+  const getTasks = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/tasks");
+      setTasks(response.data);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -78,6 +95,39 @@ const Go = () => {
       console.error("Error deleting task:", error);
     }
   };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
+        <div className="container mx-auto max-w-3xl px-4 py-12">
+          <h1 className="mb-8 text-center text-4xl font-bold text-purple-800">
+            Todo List
+          </h1>
+          <div className="rounded-lg bg-white p-6 shadow-lg">
+            <div className="text-center">
+              <p className="mb-6 text-lg text-gray-600">
+                タスクの管理にはログインが必要です
+              </p>
+              <div className="flex justify-center gap-4">
+                <Link
+                  to="/signup"
+                  className="rounded-lg bg-purple-600 px-6 py-3 font-bold text-white transition-all hover:bg-purple-700 active:scale-95"
+                >
+                  新規登録
+                </Link>
+                <Link
+                  to="/login"
+                  className="rounded-lg border-2 border-purple-600 px-6 py-3 font-bold text-purple-600 transition-all hover:bg-purple-50 active:scale-95"
+                >
+                  ログイン
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">

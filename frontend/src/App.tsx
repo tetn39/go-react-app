@@ -78,14 +78,6 @@ const App = () => {
           </li>
           <li>
             <Link
-              to="/todo"
-              className="rounded-xl px-5 py-2.5 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white/25 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
-            >
-              Todo
-            </Link>
-          </li>
-          <li>
-            <Link
               to="/go"
               className="rounded-xl px-5 py-2.5 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white/25 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
             >
