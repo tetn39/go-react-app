@@ -71,58 +71,44 @@ const App = () => {
           </li>
           <li>
             <Link
-              to="/about"
-              className="rounded-xl px-5 py-2.5 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white/25 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
-            >
-              About
-            </Link>
-          </li>
-          <li>
-            <Link
               to="/go"
               className="rounded-xl px-5 py-2.5 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white/25 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
             >
-              Go
+              ToDo
             </Link>
           </li>
           {!isLoggedIn ? (
             <>
-              <li>
+              <li className="ml-auto">
                 <Link
                   to="/signup"
-                  className={`rounded-xl px-5 py-2.5 font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95 ${
-                    location.pathname === "/signup"
-                      ? "bg-white text-indigo-600"
-                      : "border-2 border-white text-white hover:bg-white hover:text-indigo-600"
-                  }`}
+                  className="rounded-xl bg-white px-5 py-2.5 font-bold text-indigo-600 transition-all duration-300 hover:scale-105 hover:bg-indigo-50 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
                 >
-                  Signup
+                  新規登録
                 </Link>
               </li>
               <li>
                 <Link
                   to="/login"
-                  className={`rounded-xl px-5 py-2.5 font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95 ${
-                    location.pathname === "/login"
-                      ? "bg-white text-indigo-600"
-                      : "border-2 border-white text-white hover:bg-white hover:text-indigo-600"
-                  }`}
+                  className="rounded-xl border-2 border-white px-5 py-2.5 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white/25 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
                 >
-                  Login
+                  ログイン
                 </Link>
               </li>
             </>
           ) : (
             <>
               <li className="ml-auto">
-                <span className="font-medium text-white">{user?.email}</span>
+                <span className="rounded-xl bg-white/10 px-5 py-2.5 font-bold text-white">
+                  {user?.email}
+                </span>
               </li>
               <li>
                 <button
                   onClick={handleLogout}
-                  className="rounded-xl border-2 border-white px-5 py-2.5 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white hover:text-indigo-600 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
+                  className="rounded-xl border-2 border-white px-5 py-2.5 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white/25 hover:shadow-lg focus:ring-2 focus:ring-white/50 active:scale-95"
                 >
-                  Logout
+                  ログアウト
                 </button>
               </li>
             </>
